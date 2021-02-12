@@ -20,7 +20,7 @@ const Aside: React.FC = () => {
     <Container>
       <Header>
         <LogoImg src={logoImg} alt="Logo Minha Carteira"></LogoImg>
-        <Title>Minhas Carteira</Title>
+        <Title>Minha Carteira</Title>
       </Header>
 
       <MenuContainer>
