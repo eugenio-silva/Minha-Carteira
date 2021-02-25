@@ -8,9 +8,9 @@ Minha Carteira é um Dashboard de controle de gastos.
 
 ## Tecnologias Utilizadas
 
-- React.js
-- Typescript
-- Styled-components
+- [React.js]()
+- [Typescript]()
+- [Styled-components]()
 
 ---
 
