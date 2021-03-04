@@ -1,9 +1,10 @@
 import React, { useMemo, useState, useEffect } from "react";
 import ContentHeader from "../../components/ContentHeader";
 import SelectInput from "../../components/SelectInput";
+import { uuid } from 'uuidv4';
 import HistoryFinanceCard from "../../components/HistoryFinanceCard";
 import { Container, Content, Filters } from "./styles";
-
+import listOfMonths from "../../utils/months";
 import formatCurrency from '../../utils/formatCurrency';
 import formatDate from '../../utils/formatDate';
 
@@ -31,6 +32,7 @@ const List: React.FC<IRouteParams> = ({ match }) => {
   const [data, setData] = useState<IData[]>([]);
   const [monthSelected, setMonthSelected] = useState<string>(String(new Date().getMonth() + 1));
   const [yearSelected, setYearSelected] = useState<string>(String(new Date().getFullYear()));
+  const [selectedFrequency, setSelectedFrequency] = useState(['recorrente', 'eventual'])
 
   const { type } = match.params;
 
@@ -45,7 +47,7 @@ const List: React.FC<IRouteParams> = ({ match }) => {
   const listData = useMemo(() => {
     return type === 'entry-balance' ? gains : expenses;
   },[type]);
-
+  
   const years = useMemo(() => {
     let uniqueYears: number[] = [];
 
@@ -67,12 +69,25 @@ const List: React.FC<IRouteParams> = ({ match }) => {
   },[listData]);
 
   const months = useMemo(() => {
+      return listOfMonths.map((month, index) => {
+        return {
+          value: index + 1,
+          label: month,
+        }
+      });
+  },[])
 
-      return {
-        value: 'year',
-        label: 'year',
+  const handleFrequencyClick = (frequency: string) => {
+      const alreadySelected = selectedFrequency.findIndex(item => item === frequency);
+
+      if(alreadySelected >= 0) {
+        const filtered = selectedFrequency.filter(item => item !== frequency)
+        setSelectedFrequency(filtered)
+
+      } else {  
+        setSelectedFrequency((prev) => [...prev, frequency])
       }
-  },[listData])
+  }
 
   useEffect(() => {
 
@@ -82,24 +97,24 @@ const List: React.FC<IRouteParams> = ({ match }) => {
       const month = String(date.getMonth() + 1);
       const year = String(date.getFullYear());
 
-      return month === monthSelected && year === yearSelected;
+      return month === monthSelected && year === yearSelected && selectedFrequency.includes(item.frequency);
 
     });
 
     const formattedData = filteredDate.map((item) => {
 
       return {
-        id: String(new Date().getTime()) + item.amount,
+        id: uuid(),
         description: item.description,
         amountFormatted: formatCurrency(Number(item.amount)),
         frequency: item.frequency,
         dataFormatted: formatDate(item.date),
-        tagColor: item.frequency === 'recorrente'? '#4e41f0' : '#e44c4e'
+        tagColor: item.frequency === 'recorrente' ? '#4e41f0' : '#e44c4e'
       }
     })
 
     setData(formattedData)    
-  },[listData, monthSelected, yearSelected, data.length]);
+  },[listData, monthSelected, yearSelected, data.length, selectedFrequency]);
 
   return (
     <Container>
@@ -109,12 +124,20 @@ const List: React.FC<IRouteParams> = ({ match }) => {
       </ContentHeader>
 
       <Filters>
-        <button className="tag-filter tag-filter-recurrent" type="button">
-          Recorrentes
+        <button 
+          className={`tag-filter tag-filter-recurrent
+          ${selectedFrequency.includes('recorrente') && 'tag-actived'}`} 
+          onClick={() => handleFrequencyClick('recorrente')} 
+          type="button">
+            Recorrentes
         </button>
 
-        <button className="tag-filter tag-filter-eventual" type="button">
-          Eventuais
+        <button 
+          className={`tag-filter tag-filter-eventual
+          ${selectedFrequency.includes('eventual') && 'tag-actived'}`}
+          onClick={() => handleFrequencyClick('eventual')} 
+          type="button">
+            Eventuais
         </button>
       </Filters>
 
