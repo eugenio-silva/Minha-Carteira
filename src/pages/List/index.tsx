@@ -43,7 +43,7 @@ const List: React.FC<IRouteParams> = ({ match }) => {
     return movimentType === 'entry-balance' ?
       {
         title: 'Entradas',
-        lineColor: '#f7931b',
+        lineColor: '#4e41f0',
         data: gains
       }
       :
@@ -151,9 +151,20 @@ const List: React.FC<IRouteParams> = ({ match }) => {
 
   return (
     <Container>
+
       <ContentHeader title={pageData.title} lineColor={pageData.lineColor}>
-        <SelectInput options={months} onChange={(e) => handleMonthSelected(e.target.value)} defaultValue={monthSelected} />
-        <SelectInput options={years} onChange={(e) => handleYearSelected(e.target.value)} defaultValue={yearSelected} />
+
+        <SelectInput 
+            options={months} 
+            onChange={(e) => handleMonthSelected(e.target.value)} 
+            defaultValue={monthSelected} 
+        />
+        <SelectInput 
+            options={years} 
+            onChange={(e) => handleYearSelected(e.target.value)} 
+            defaultValue={yearSelected} 
+        />
+
       </ContentHeader>
 
       <Filters>
