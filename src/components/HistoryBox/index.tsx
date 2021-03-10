@@ -8,7 +8,13 @@ import {
     CartesianGrid, 
     Tooltip } from 'recharts';
 
-import { Container, CharContainer } from './styles';
+import { 
+    Container, 
+    CharContainer, 
+    Header,
+    LegendContainer,
+    Legend 
+} from './styles';
 
 interface IHistoryBoxProps {
     data: {
@@ -24,7 +30,23 @@ const HistoryBox: React.FC<IHistoryBoxProps> = ({
     data, lineColorAmountEntry, lineColorAmountOutput
  }) => (
     <Container>
-        <h2>Histórico de saldo</h2>
+
+        <Header>
+            <h2>Histórico de saldo</h2>
+
+            <LegendContainer>
+                <Legend color={lineColorAmountEntry}>
+                    <div></div>
+                    <span>Entradas</span>
+                </Legend>
+         
+                <Legend color={lineColorAmountOutput}>
+                    <div></div>
+                    <span>Saídas</span>
+                </Legend>
+            </LegendContainer>
+
+        </Header>
 
         <CharContainer>
             <ResponsiveContainer>
